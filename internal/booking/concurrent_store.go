@@ -1,19 +1,25 @@
 package booking
 
+import "sync"
+
 // maps in golang are not concurrent safe
-type MemoryStore struct {
+type ConcurrentStore struct {
 	//seats to booking
 	bookings map[string]Booking
+	mu       sync.RWMutex
 }
 
 // constructor function
-func NewMemoryStore() *MemoryStore {
-	return &MemoryStore{
+func NewConcurrentStore() *ConcurrentStore {
+	return &ConcurrentStore{
 		bookings: map[string]Booking{},
 	}
 }
 
-func (s *MemoryStore) Book(b Booking) error {
+func (s *ConcurrentStore) Book(b Booking) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	if _, exists := s.bookings[b.SeatId]; exists {
 		return ErrorSeatAlreadyBooked
 	}
@@ -23,8 +29,10 @@ func (s *MemoryStore) Book(b Booking) error {
 	return nil
 }
 
-func (s *MemoryStore) ListBookings(movieID string) []Booking {
+func (s *ConcurrentStore) ListBookings(movieID string) []Booking {
 	var bookings []Booking
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 
 	for _, v := range s.bookings {
 		if v.MovieId == movieID {
