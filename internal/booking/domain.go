@@ -1,17 +1,21 @@
 package booking
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 var (
 	ErrorSeatAlreadyBooked = errors.New("seat already taken")
 )
 
 type Booking struct {
-	Id      string
-	MovieId string
-	SeatId  string
-	UserId  string
-	Status  string
+	Id        string
+	MovieId   string
+	SeatId    string
+	UserId    string
+	Status    string
+	ExpiresAt time.Time
 }
 
 type BookingStore interface {
