@@ -28,8 +28,8 @@ func sessionKey(id string) string {
 	return fmt.Sprintf("session:%s", id)
 }
 
-func holdKey(movieID, seatId string) string {
-	return fmt.Sprintf("seat:%s:%s", movieID, seatId)
+func holdKey(movieID, seatID string) string {
+	return fmt.Sprintf("seat:%s:%s", movieID, seatID)
 }
 
 func (s *RedisStore) Book(b Booking) error {
