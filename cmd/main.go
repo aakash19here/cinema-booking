@@ -16,6 +16,7 @@ import (
 func main() {
 	const port = "8080"
 	mux := http.NewServeMux()
+	mux.Handle("GET /", http.FileServer(http.Dir("static")))
 
 	mux.HandleFunc("GET /movies", listMovies)
 	mux.HandleFunc("POST /booking", booking.HandleBooking)
@@ -52,10 +53,10 @@ func shutdown(s *http.Server) {
 }
 
 type movieResponse struct {
-	ID          string
-	Title       string
-	Rows        int
-	SeatsPerRow int
+	ID          string `json:"id"`
+	Title       string `json:"title"`
+	Rows        int    `json:"rows"`
+	SeatsPerRow int    `json:"seats_per_row"`
 }
 
 var movies = []movieResponse{
